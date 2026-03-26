@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /c/Users/tnusc/blindspot/cinegaps/src/data/lists/*.ts)"
+    ]
+  }
+}
