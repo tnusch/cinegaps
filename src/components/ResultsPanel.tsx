@@ -1,26 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ComparisonResult, Film } from "../lib/types";
+import PosterImage from "./PosterImage";
 
-// ── Film list ────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 5;
 
-function FilmList({ films, emptyMessage }: { films: Film[]; emptyMessage: string }) {
+// ── Film grid with pagination ────────────────────────────────────────────────
+
+function FilmGrid({ films, emptyMessage }: { films: Film[]; emptyMessage: string }) {
+  const [page, setPage] = useState(0);
+
+  // Reset to first page whenever the film list changes (tab switch)
+  useEffect(() => { setPage(0); }, [films]);
+
   if (films.length === 0) {
     return <p className="text-sm text-zinc-400 italic">{emptyMessage}</p>;
   }
+
+  const totalPages = Math.ceil(films.length / PAGE_SIZE);
+  const pageFilms = films.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
   return (
-    <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-      {films.map((film) => (
-        <li
-          key={`${film.title}-${film.year}`}
-          className="flex items-baseline justify-between rounded-md px-3 py-1.5 text-sm odd:bg-zinc-50"
-        >
-          <span className="font-medium text-zinc-800">{film.title}</span>
-          <span className="ml-2 shrink-0 text-zinc-400">{film.year}</span>
-        </li>
-      ))}
-    </ul>
+    <div className="space-y-4">
+      <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+        {pageFilms.map((film) => (
+          <li key={`${film.title}-${film.year}`} className="flex flex-col gap-1.5">
+            <PosterImage
+              title={film.title}
+              year={film.year}
+              className="aspect-2/3 w-full"
+              sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 20vw"
+            />
+            <div>
+              <p className="text-xs font-medium text-zinc-800 leading-tight line-clamp-2">
+                {film.title}
+              </p>
+              <p className="text-xs text-zinc-400">{film.year}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 0}
+            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            ← Previous
+          </button>
+          <span className="text-xs text-zinc-400">
+            {page + 1} / {totalPages}
+            <span className="ml-1.5 text-zinc-300">({films.length} films)</span>
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page === totalPages - 1}
+            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            Next →
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -66,7 +110,7 @@ function ListSection({ result }: { result: ComparisonResult }) {
         </div>
       </div>
 
-      <FilmList
+      <FilmGrid
         films={tab === "unseen" ? result.unseen : result.seen}
         emptyMessage={
           tab === "unseen"

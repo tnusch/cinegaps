@@ -17,8 +17,10 @@ const sightAndSound2022: CanonicalList = {
     { title: "2001: A Space Odyssey", year: 1968, director: "Stanley Kubrick" },
     { title: "Beau Travail", year: 1999, director: "Claire Denis" },
     { title: "Mulholland Drive", year: 2001, director: "David Lynch" },
+    { title: "Fight Club", year: 1999, director: "David Fincher" },
     { title: "Man with a Movie Camera", year: 1929, director: "Dziga Vertov" },
     { title: "Singin' in the Rain", year: 1952, director: "Stanley Donen" },
+    { title: "Frankenstein", year: 1931, director: "James Whale" },
     // TODO: add remaining 90 entries
   ],
 };

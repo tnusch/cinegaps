@@ -33,6 +33,20 @@ Find the blind spots in your film education. Cinegaps compares your Letterboxd w
 
 **Prerequisites**: Node.js 18+
 
+### 1. Set up TMDB for movie posters (optional)
+
+Movie posters are fetched from [The Movie Database](https://www.themoviedb.org). Without an API key the app works normally — posters just won't load.
+
+1. Create a free account at [themoviedb.org](https://www.themoviedb.org/signup)
+2. Go to **Settings → API** and copy your API key
+3. Create `.env.local` in the project root:
+
+```bash
+TMDB_API_KEY=your_api_key_here
+```
+
+### 2. Install and run
+
 ```bash
 # Install dependencies
 npm install

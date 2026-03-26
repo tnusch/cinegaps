@@ -17,8 +17,10 @@ const movies1001: CanonicalList = {
     { title: "The Passion of Joan of Arc", year: 1928, director: "Carl Theodor Dreyer" },
     { title: "Un Chien Andalou", year: 1929, director: "Luis Buñuel" },
     { title: "M", year: 1931, director: "Fritz Lang" },
+    { title: "Fight Club", year: 1999, director: "David Fincher" },
     { title: "2001: A Space Odyssey", year: 1968, director: "Stanley Kubrick" },
     { title: "Frankenstein", year: 1931, director: "James Whale" },
+    { title: "Mulholland Drive", year: 2001, director: "David Lynch" },
     // TODO: add remaining ~991 entries
   ],
 };
