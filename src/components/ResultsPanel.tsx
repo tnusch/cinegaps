@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { letterboxdFilmUrl } from "../lib/letterboxd";
 import type { ComparisonResult, Film } from "../lib/types";
 import PosterImage from "./PosterImage";
 
@@ -15,7 +16,7 @@ function FilmGrid({ films, emptyMessage }: { films: Film[]; emptyMessage: string
   useEffect(() => { setPage(0); }, [films]);
 
   if (films.length === 0) {
-    return <p className="text-sm text-zinc-400 italic">{emptyMessage}</p>;
+    return <p className="text-sm text-zinc-400 dark:text-zinc-500 italic">{emptyMessage}</p>;
   }
 
   const totalPages = Math.ceil(films.length / PAGE_SIZE);
@@ -31,12 +32,13 @@ function FilmGrid({ films, emptyMessage }: { films: Film[]; emptyMessage: string
               year={film.year}
               className="aspect-2/3 w-full"
               sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 20vw"
+              href={letterboxdFilmUrl(film.title)}
             />
             <div>
-              <p className="text-xs font-medium text-zinc-800 leading-tight line-clamp-2">
+              <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200 leading-tight line-clamp-2">
                 {film.title}
               </p>
-              <p className="text-xs text-zinc-400">{film.year}</p>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500">{film.year}</p>
             </div>
           </li>
         ))}
@@ -47,18 +49,18 @@ function FilmGrid({ films, emptyMessage }: { films: Film[]; emptyMessage: string
           <button
             onClick={() => setPage((p) => p - 1)}
             disabled={page === 0}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-30"
           >
             ← Previous
           </button>
-          <span className="text-xs text-zinc-400">
+          <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {page + 1} / {totalPages}
-            <span className="ml-1.5 text-zinc-300">({films.length} films)</span>
+            <span className="ml-1.5 text-zinc-300 dark:text-zinc-600">({films.length} films)</span>
           </span>
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={page === totalPages - 1}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-30"
           >
             Next →
           </button>
@@ -79,20 +81,20 @@ function ListSection({ result }: { result: ComparisonResult }) {
     <section>
       <div className="mb-3 flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-zinc-900">{result.list.name}</h3>
-          <p className="text-xs text-zinc-400">
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">{result.list.name}</h3>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500">
             {result.seen.length} seen · {result.unseen.length} unseen · {result.list.films.length} total
           </p>
         </div>
 
         {/* Toggle */}
-        <div className="flex shrink-0 overflow-hidden rounded-lg border border-zinc-200 text-sm">
+        <div className="flex shrink-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 text-sm">
           <button
             onClick={() => setTab("unseen")}
             className={`px-3 py-1.5 transition-colors ${
               tab === "unseen"
-                ? "bg-zinc-900 text-white"
-                : "text-zinc-500 hover:bg-zinc-50"
+                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
             }`}
           >
             Blind spots
@@ -101,8 +103,8 @@ function ListSection({ result }: { result: ComparisonResult }) {
             onClick={() => setTab("seen")}
             className={`px-3 py-1.5 transition-colors ${
               tab === "seen"
-                ? "bg-zinc-900 text-white"
-                : "text-zinc-500 hover:bg-zinc-50"
+                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
             }`}
           >
             Seen

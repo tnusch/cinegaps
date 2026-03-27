@@ -48,17 +48,19 @@ export default function CsvUploader({ onParsed }: Props) {
   return (
     <div
       className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-12 transition-colors ${
-        dragging ? "border-blue-500 bg-blue-50" : "border-zinc-300 bg-zinc-50"
+        dragging
+          ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/30"
+          : "border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900"
       }`}
       onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
     >
-      <p className="mb-4 text-center text-zinc-600">
-        Drop your Letterboxd <code className="rounded bg-zinc-200 px-1 text-sm">watched.csv</code> here
+      <p className="mb-4 text-center text-zinc-600 dark:text-zinc-300">
+        Drop your Letterboxd <code className="rounded bg-zinc-200 dark:bg-zinc-700 px-1 text-sm">watched.csv</code> here
       </p>
       <button
-        className="rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-zinc-700"
+        className="rounded-lg bg-zinc-900 dark:bg-zinc-100 px-5 py-2.5 text-sm font-medium text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200"
         onClick={() => inputRef.current?.click()}
       >
         Choose file
@@ -71,9 +73,9 @@ export default function CsvUploader({ onParsed }: Props) {
         onChange={onInputChange}
       />
       {error && (
-        <p className="mt-4 text-sm text-red-600">{error}</p>
+        <p className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
-      <p className="mt-4 text-xs text-zinc-400">
+      <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
         Export from Letterboxd → Settings → Import & Export → Export Your Data
       </p>
     </div>

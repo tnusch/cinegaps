@@ -20,22 +20,13 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
     const regionData = data.results?.[region] ?? {};
 
-    // Deduplicate across flatrate → rent → buy (prefer flatrate if same provider appears in multiple)
     const seen = new Set<number>();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const merge = (entries: any[], type: string) =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries ?? []).flatMap((p: any) => {
-        if (seen.has(p.provider_id)) return [];
-        seen.add(p.provider_id);
-        return [{ id: p.provider_id as number, name: p.provider_name as string, logoPath: (p.logo_path as string | null) ?? null, type }];
-      });
-
-    const providers = [
-      ...merge(regionData.flatrate, "stream"),
-      ...merge(regionData.rent,     "rent"),
-      ...merge(regionData.buy,      "buy"),
-    ];
+    const providers = (regionData.flatrate ?? []).flatMap((p: any) => {
+      if (seen.has(p.provider_id)) return [];
+      seen.add(p.provider_id);
+      return [{ id: p.provider_id as number, name: p.provider_name as string, logoPath: (p.logo_path as string | null) ?? null }];
+    });
 
     return NextResponse.json(
       { providers },

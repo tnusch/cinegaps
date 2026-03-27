@@ -7,6 +7,7 @@ const movies1001: CanonicalList = {
   name: "1001 Movies You Must See Before You Die",
   shortName: "1001 Movies",
   description: "The canonical film book edited by Steven Jay Schneider (2021 edition)",
+  category: "awards",
   films: [
     { title: "A Trip to the Moon", year: 1902, director: "Georges Méliès" },
     { title: "The Birth of a Nation", year: 1915, director: "D.W. Griffith" },

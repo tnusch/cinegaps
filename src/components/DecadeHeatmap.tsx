@@ -7,9 +7,9 @@ interface Props {
 }
 
 function cellClasses(percent: number): string {
-  if (percent === 0)   return "bg-zinc-100 text-zinc-400";
-  if (percent < 25)    return "bg-zinc-200 text-zinc-700";
-  if (percent < 50)    return "bg-zinc-400 text-white";
+  if (percent === 0)   return "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500";
+  if (percent < 25)    return "bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300";
+  if (percent < 50)    return "bg-zinc-400 dark:bg-zinc-500 text-white";
   if (percent < 75)    return "bg-zinc-600 text-white";
   if (percent < 100)   return "bg-zinc-800 text-white";
   return "bg-black text-white";
@@ -20,7 +20,7 @@ export default function DecadeHeatmap({ stats }: Props) {
 
   return (
     <div>
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
         Coverage by decade
       </h2>
       <div className="flex flex-wrap gap-2">
@@ -37,7 +37,7 @@ export default function DecadeHeatmap({ stats }: Props) {
         ))}
       </div>
       {/* Legend */}
-      <div className="mt-3 flex items-center gap-1.5 text-[10px] text-zinc-400">
+      <div className="mt-3 flex items-center gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500">
         <span>0%</span>
         {[0, 25, 50, 75, 100].map((p) => (
           <div key={p} className={`h-3 w-5 rounded ${cellClasses(p === 0 ? 0 : p - 1)}`} />

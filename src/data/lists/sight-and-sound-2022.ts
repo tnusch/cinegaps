@@ -7,6 +7,7 @@ const sightAndSound2022: CanonicalList = {
   name: "Sight & Sound Greatest Films 2022",
   shortName: "S&S 2022",
   description: "BFI Sight & Sound critics' poll — top 100 films of all time (2022 edition)",
+  category: "critics",
   films: [
     { title: "Jeanne Dielman, 23 quai du Commerce, 1080 Bruxelles", year: 1975, director: "Chantal Akerman" },
     { title: "Vertigo", year: 1958, director: "Alfred Hitchcock" },

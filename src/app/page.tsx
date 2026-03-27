@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CsvUploader from "../components/CsvUploader";
 import DecadeHeatmap from "../components/DecadeHeatmap";
 import ListSelector from "../components/ListSelector";
@@ -16,6 +16,22 @@ export default function Home() {
   const [selectedListIds, setSelectedListIds] = useState<Set<string>>(
     new Set(ALL_LISTS.map((l) => l.id))
   );
+  const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Sync React state with whatever the inline script set on <html> before hydration
+  useEffect(() => {
+    setDarkMode(document.documentElement.classList.contains("dark"));
+    setMounted(true);
+  }, []);
+
+  function toggleDark() {
+    // Read from DOM as ground truth to avoid stale-closure issues
+    const next = !document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", next);
+    setDarkMode(next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  }
 
   const activeLists = useMemo(
     () => ALL_LISTS.filter((l) => selectedListIds.has(l.id)),
@@ -35,28 +51,42 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-zinc-950">
       <div className="mx-auto max-w-3xl px-6 py-16 space-y-12">
 
         {/* Header */}
-        <header>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-            Cinegaps
-          </h1>
-          <p className="mt-2 text-zinc-500">
-            Discover which great films you haven&apos;t seen yet. Upload your Letterboxd export and see your blind spots across cinema&apos;s most important lists.
-          </p>
+        <header className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Cinegaps
+            </h1>
+            <p className="mt-2 text-zinc-500 dark:text-zinc-400">
+              Discover which great films you haven&apos;t seen yet. Upload your Letterboxd export and see your blind spots across cinema&apos;s most important lists.
+            </p>
+          </div>
+          <button
+            onClick={toggleDark}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            className="mt-1 shrink-0 rounded-lg border border-zinc-200 dark:border-zinc-700 p-2 text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+          >
+            {/* Only render after mount to avoid hydration mismatch */}
+            {mounted && (darkMode ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            ))}
+          </button>
         </header>
 
         {/* Upload */}
         <section>
           {watched ? (
-            <div className="flex items-center justify-between rounded-xl border border-zinc-200 px-5 py-4">
-              <span className="text-sm text-zinc-600">
-                <span className="font-medium text-zinc-900">{watched.length} films</span> loaded
+            <div className="flex items-center justify-between rounded-xl border border-zinc-200 dark:border-zinc-800 px-5 py-4">
+              <span className="text-sm text-zinc-600 dark:text-zinc-300">
+                <span className="font-medium text-zinc-900 dark:text-zinc-50">{watched.length} films</span> loaded
               </span>
               <button
-                className="text-sm text-zinc-400 hover:text-zinc-700"
+                className="text-sm text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-200"
                 onClick={() => setWatched(null)}
               >
                 Change file
@@ -81,7 +111,7 @@ export default function Home() {
             {/* Radial rings — one per active list */}
             {results.length > 0 && (
               <section>
-                <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                   Coverage overview
                 </h2>
                 <div className="flex flex-wrap gap-6">
@@ -92,6 +122,7 @@ export default function Home() {
                       label={r.list.shortName}
                       seen={r.seen.length}
                       total={r.list.films.length}
+                      darkMode={darkMode}
                     />
                   ))}
                 </div>
@@ -114,7 +145,7 @@ export default function Home() {
 
             {/* Per-list results with seen/unseen toggle */}
             <section>
-              <h2 className="mb-6 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+              <h2 className="mb-6 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 By list
               </h2>
               <ResultsPanel results={results} />

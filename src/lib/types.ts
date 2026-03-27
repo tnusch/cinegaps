@@ -10,11 +10,14 @@ export interface WatchedFilm extends Film {
   letterboxdUri?: string;
 }
 
+export type ListCategory = "critics" | "fans" | "awards";
+
 export interface CanonicalList {
   id: string;
   name: string;
   shortName: string;
   description: string;
+  category: ListCategory;
   films: Film[];
 }
 
