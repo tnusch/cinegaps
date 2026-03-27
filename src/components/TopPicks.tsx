@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import type { CrossListFilm } from "../lib/compare";
+import type { CrossListFilm, EraLabel } from "../lib/compare";
+import { ERAS } from "../lib/compare";
 import { fetchPosterResult } from "../lib/poster";
 import { fetchProviders, type ProviderInfo } from "../lib/providers";
 import { letterboxdFilmUrl } from "../lib/letterboxd";
@@ -149,6 +150,7 @@ export default function TopPicks({ films, limit = 10 }: Props) {
   const [region, setRegion] = useState("US");
   const [filmProviders, setFilmProviders] = useState(new Map<string, ProviderInfo[]>());
   const [selectedProvider, setSelectedProvider] = useState<number | null>(null);
+  const [selectedEra, setSelectedEra] = useState<EraLabel | null>(null);
   const [showShareCard, setShowShareCard] = useState(false);
 
   // Set region from locale on mount (navigator not available during SSR)
@@ -179,15 +181,22 @@ export default function TopPicks({ films, limit = 10 }: Props) {
     return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
   }, [filmProviders]);
 
-  // When filtering: show films not yet loaded (assume available) + confirmed matches
+  // Era filter
+  const eraFilteredPicks = useMemo(() => {
+    if (!selectedEra) return picks;
+    const era = ERAS.find((e) => e.label === selectedEra)!;
+    return picks.filter(({ film }) => film.year >= era.from && film.year <= era.to);
+  }, [picks, selectedEra]);
+
+  // Provider filter on top of era filter — show unloaded films (assume available)
   const filteredPicks = useMemo(() => {
-    if (!selectedProvider) return picks;
-    return picks.filter(({ film }) => {
+    if (!selectedProvider) return eraFilteredPicks;
+    return eraFilteredPicks.filter(({ film }) => {
       const key = `${film.title}:${film.year}`;
       if (!filmProviders.has(key)) return true;
       return filmProviders.get(key)!.some((p) => p.id === selectedProvider);
     });
-  }, [picks, selectedProvider, filmProviders]);
+  }, [eraFilteredPicks, selectedProvider, filmProviders]);
 
   if (picks.length === 0) return null;
 
@@ -223,6 +232,23 @@ export default function TopPicks({ films, limit = 10 }: Props) {
             Share ↗
           </button>
         </div>
+      </div>
+
+      {/* Era filter */}
+      <div className="mb-4 flex flex-wrap gap-1.5">
+        {[null, ...ERAS.map((e) => e.label)].map((era) => (
+          <button
+            key={era ?? "all"}
+            onClick={() => setSelectedEra(era as EraLabel | null)}
+            className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              selectedEra === era
+                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            }`}
+          >
+            {era ?? "All eras"}
+          </button>
+        ))}
       </div>
 
       {/* Provider filter — appears as streaming data loads in */}

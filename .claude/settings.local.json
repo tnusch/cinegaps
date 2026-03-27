@@ -5,7 +5,8 @@
       "Bash(find c:Userstnuscblindspotcinegapsnode_modulestailwindcss -type f \\\\\\(-name *.md -o -name README* \\\\\\))",
       "Bash(xargs grep:*)",
       "Bash(grep -r \"custom-variant\\\\|@variant\" /c/Users/tnusc/blindspot/cinegaps/node_modules/tailwindcss/dist/ --include=*.js -l)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

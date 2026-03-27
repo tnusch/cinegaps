@@ -18,6 +18,7 @@ export interface CanonicalList {
   shortName: string;
   description: string;
   category: ListCategory;
+  listUri?: string;
   films: Film[];
 }
 

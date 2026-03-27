@@ -6,8 +6,8 @@ import tspdt1000 from "./lists/tspdt-1000";
 import rogerEbert from "./lists/roger-ebert";
 
 // Fan Favorites
-import letterboxdOfficial250 from "./lists/letterboxd-official-250";
-import letterboxdMostFans250 from "./lists/letterboxd-most-fans-250";
+import letterboxdOfficial500 from "./lists/letterboxd-official-500";
+import letterboxdMostFans100 from "./lists/letterboxd-most-fans-100";
 import imdbTop250 from "./lists/imdb-top250";
 
 // Award Winners
@@ -21,8 +21,8 @@ export const ALL_LISTS: CanonicalList[] = [
   tspdt1000,
   rogerEbert,
   // Fan Favorites
-  letterboxdOfficial250,
-  letterboxdMostFans250,
+  letterboxdOfficial500,
+  letterboxdMostFans100,
   imdbTop250,
   // Award Winners
   oscarBestPicture,
@@ -34,8 +34,8 @@ export {
   sightAndSound2022,
   tspdt1000,
   rogerEbert,
-  letterboxdOfficial250,
-  letterboxdMostFans250,
+  letterboxdOfficial500,
+  letterboxdMostFans100,
   imdbTop250,
   oscarBestPicture,
   cannesPalmeDor,

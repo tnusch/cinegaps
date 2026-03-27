@@ -76,24 +76,44 @@ export function crossListGaps(results: ComparisonResult[]): CrossListFilm[] {
   }
 
   return Array.from(map.values()).sort(
-    (a, b) => b.listCount - a.listCount || a.film.year - b.film.year
+    (a, b) => b.listCount - a.listCount || b.film.year - a.film.year
   );
 }
 
-// ── Decade heatmap ───────────────────────────────────────────────────────────
+// ── Era chart ─────────────────────────────────────────────────────────────────
 
-export interface DecadeStats {
-  decade: number; // e.g. 1960 for "1960s"
-  total: number;  // unique canonical films from this decade (across selected lists)
+export type EraLabel = "Classic" | "Golden" | "Modern" | "Current";
+
+export interface EraRange {
+  label: EraLabel;
+  /** First year included in this era (inclusive). */
+  from: number;
+  /** Last year included in this era (inclusive). */
+  to: number;
+}
+
+/** Ordered era definitions used both for stats and for UI filters. */
+export const ERAS: EraRange[] = [
+  { label: "Classic", from: 0,    to: 1959 },
+  { label: "Golden",  from: 1960, to: 1979 },
+  { label: "Modern",  from: 1980, to: 1999 },
+  { label: "Current", from: 2000, to: 9999 },
+];
+
+export interface EraStats {
+  label: EraLabel;
+  from: number;
+  to: number;
+  total: number;
   seen: number;
   percent: number;
 }
 
-/** Aggregates coverage per decade across all selected lists (deduplicates films). */
-export function buildDecadeStats(
+/** Aggregates coverage per era across all selected lists (deduplicates films). */
+export function buildEraStats(
   watched: WatchedFilm[],
   lists: CanonicalList[]
-): DecadeStats[] {
+): EraStats[] {
   // Deduplicate canonical films across lists by key
   const allFilms = new Map<string, Film>();
   for (const list of lists) {
@@ -102,22 +122,12 @@ export function buildDecadeStats(
       if (!allFilms.has(key)) allFilms.set(key, film);
     }
   }
+  const films = Array.from(allFilms.values());
 
-  const decades = new Map<number, { total: number; seen: number }>();
-  for (const film of allFilms.values()) {
-    const decade = Math.floor(film.year / 10) * 10;
-    if (!decades.has(decade)) decades.set(decade, { total: 0, seen: 0 });
-    const stats = decades.get(decade)!;
-    stats.total++;
-    if (watched.some((w) => filmsMatch(w, film))) stats.seen++;
-  }
-
-  return Array.from(decades.entries())
-    .sort(([a], [b]) => a - b)
-    .map(([decade, { total, seen }]) => ({
-      decade,
-      total,
-      seen,
-      percent: total > 0 ? Math.round((seen / total) * 100) : 0,
-    }));
+  return ERAS.map(({ label, from, to }) => {
+    const era = films.filter((f) => f.year >= from && f.year <= to);
+    const total = era.length;
+    const seen = era.filter((f) => watched.some((w) => filmsMatch(w, f))).length;
+    return { label, from, to, total, seen, percent: total > 0 ? Math.round((seen / total) * 100) : 0 };
+  });
 }

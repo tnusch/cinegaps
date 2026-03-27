@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import CsvUploader from "../components/CsvUploader";
-import DecadeHeatmap from "../components/DecadeHeatmap";
+import EraChart from "../components/EraChart";
 import ListSelector from "../components/ListSelector";
 import RadialRing from "../components/RadialRing";
 import ResultsPanel from "../components/ResultsPanel";
 import TopPicks from "../components/TopPicks";
 import { ALL_LISTS } from "../data";
-import { buildDecadeStats, compareAll, crossListGaps } from "../lib/compare";
+import { buildEraStats, compareAll, crossListGaps } from "../lib/compare";
 import type { WatchedFilm } from "../lib/types";
 
 export default function Home() {
@@ -45,8 +45,8 @@ export default function Home() {
 
   const gapFillers = useMemo(() => crossListGaps(results), [results]);
 
-  const decadeStats = useMemo(
-    () => (watched ? buildDecadeStats(watched, activeLists) : []),
+  const eraStats = useMemo(
+    () => (watched ? buildEraStats(watched, activeLists) : []),
     [watched, activeLists]
   );
 
@@ -129,10 +129,10 @@ export default function Home() {
               </section>
             )}
 
-            {/* Decade heatmap */}
-            {decadeStats.length > 0 && (
+            {/* Era chart */}
+            {eraStats.some((s) => s.total > 0) && (
               <section>
-                <DecadeHeatmap stats={decadeStats} />
+                <EraChart stats={eraStats} darkMode={darkMode} />
               </section>
             )}
 
