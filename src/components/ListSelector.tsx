@@ -49,7 +49,6 @@ export default function ListSelector({ lists, selected, onChange }: Props) {
 
         return (
           <div key={category}>
-            {/* Category header */}
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -67,7 +66,6 @@ export default function ListSelector({ lists, selected, onChange }: Props) {
               </button>
             </div>
 
-            {/* List cards */}
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               {categoryLists.map((list) => {
                 const active = selected.has(list.id);

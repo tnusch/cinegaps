@@ -10,6 +10,8 @@ import { letterboxdFilmUrl } from "../lib/letterboxd";
 import { getLocaleRegion, TMDB_REGIONS } from "../lib/regions";
 import type { Film } from "../lib/types";
 import ShareCard from "./ShareCard";
+import type { Archetype } from "../lib/archetype";
+import { downloadLetterboxdCsv } from "../lib/export";
 
 const TMDB_LOGO_BASE = "https://image.tmdb.org/t/p/w45";
 
@@ -141,10 +143,11 @@ const TopPickCard = memo(function TopPickCard({ film, listCount, listNames, regi
 
 interface Props {
   films: CrossListFilm[];
+  archetype?: Archetype | null;
   limit?: number;
 }
 
-export default function TopPicks({ films, limit = 10 }: Props) {
+export default function TopPicks({ films, archetype, limit = 10 }: Props) {
   const picks = films.filter((f) => f.listCount > 1).slice(0, limit);
 
   const [region, setRegion] = useState("US");
@@ -203,7 +206,7 @@ export default function TopPicks({ films, limit = 10 }: Props) {
   return (
     <div>
       {showShareCard && (
-        <ShareCard picks={picks} onClose={() => setShowShareCard(false)} />
+        <ShareCard picks={picks} archetype={archetype} onClose={() => setShowShareCard(false)} />
       )}
       {/* Header */}
       <div className="mb-4 flex items-start justify-between gap-4">
@@ -230,6 +233,13 @@ export default function TopPicks({ films, limit = 10 }: Props) {
             className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700"
           >
             Share ↗
+          </button>
+          <button
+            onClick={() => downloadLetterboxdCsv(films.slice(0, 10).map((f) => f.film), "cinegaps-watchlist.csv")}
+            title="Download as Letterboxd-importable CSV"
+            className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700"
+          >
+            Export ↓
           </button>
         </div>
       </div>

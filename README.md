@@ -7,12 +7,12 @@ Find the blind spots in your film education. Cinegaps compares your Letterboxd w
 ## Features
 
 - **Letterboxd CSV import** — drop your `watched.csv` export and get results instantly; no account connection or login required
-- **9 canonical lists across 3 categories** — compare against Critics' Consensus (Sight & Sound, TSPDT, Ebert), Fan Favorites (Letterboxd Top 500, Most Fans, IMDb), and Award Winners (Oscars, Cannes, 1001 Movies); mix and match freely
+- **9 canonical lists across 3 categories** — compare against Critics' Consensus (Sight & Sound, TSPDT, Ebert), Fan Favorites (Letterboxd Top 500, Most Fans, IMDb), and Award Winners (Oscars, Cannes, Venice); mix and match freely
+- **Blind spot profile** — derives your viewing archetype (The Cinephile, The Anglophone, The New Waver, etc.) from your era and category coverage patterns, with stat bars showing the underlying signals
 - **Top picks** — ranks unseen films by how many of your selected lists they appear on, surfacing the single highest-impact watches first
-- **Visuals** — coverage rings show your seen/total ratio per list at a glance; era donuts (Classic, Golden, Modern, Current) show where your blind spots cluster across cinema history
 - **Streaming availability** — each top pick shows which flatrate services carry it in your region, so you can act on a recommendation immediately
-- **Fuzzy matching** — normalises titles (articles, punctuation, diacritics) and applies ±1 year tolerance so release-date inconsistencies between Letterboxd and canonical sources don't create false gaps
-- **Fully client-side** — your watch history never leaves the browser; all processing happens locally with no server upload
+- **Export & share** — download your top 10 blind spots as a Letterboxd-importable CSV, or generate a shareable PNG card with native mobile share support
+- **Private by design** — your watch history never leaves the browser; all processing is fully client-side with no server upload
 
 ---
 
@@ -28,7 +28,27 @@ Find the blind spots in your film education. Cinegaps compares your Letterboxd w
 | [IMDb Top 250](https://www.imdb.com/chart/top/) | Fan Favorites | 250 | Highest-rated films on IMDb (min. votes threshold) | Dominated by English-language and mainstream cinema; over-represents blockbusters and recent releases |
 | [Oscar Best Picture Winners](https://www.oscars.org/oscars/ceremonies/1) | Award Winners | 98 | One film per year, 1927/28–present | Rewards prestige Hollywood productions; historically poor track record with foreign-language and genre films |
 | [Cannes Palme d'Or Winners](https://www.festival-cannes.com) | Award Winners | 103 | One film per year, 1955–present; includes joint winners | Strong European arthouse slant; more adventurous than the Oscars; includes joint winners and honorary awards |
-| [1001 Movies You Must See Before You Die](https://en.wikipedia.org/wiki/1001_Movies_You_Must_See_Before_You_Die) | Award Winners | 1,259 | Encyclopedic — all eras, all countries | Cumulative across all editions (films added annually, rarely removed); emphasises breadth and historical significance |
+| [Venice Golden Lion Winners](https://letterboxd.com/cyyc1520/list/venice-golden-lion/) | Award Winners | 83 | One film per year, 1945–present | The oldest major film festival award; broader international range than Cannes, with a history of rewarding challenging and formally daring work |
+
+---
+
+## Blind Spot Archetypes
+
+The profile section derives one of eleven archetypes from your coverage data:
+
+| Archetype | Signal |
+|---|---|
+| The Newcomer | Overall coverage below 10% |
+| The Completionist | Overall coverage above 65% |
+| The Cinephile | Critics' lists lead by 12+ points over Fans and Awards |
+| The Populist | Fan lists lead by 12+ points over Critics and Awards |
+| The Ceremony Watcher | Awards lists lead by 12+ points over Critics and Fans |
+| The Anglophone | IMDb coverage leads Sight & Sound + Cannes average by 20+ points |
+| The Archivist | Classic era (pre-1960) coverage dominates by 15+ points |
+| The New Waver | Golden era (1960–79) coverage dominates by 15+ points |
+| The Nineties Kid | Modern era (1980–99) coverage dominates by 15+ points |
+| The Modernist | Current era (2000–) coverage dominates by 15+ points |
+| The Explorer | No dominant pattern |
 
 ---
 
@@ -36,12 +56,11 @@ Find the blind spots in your film education. Cinegaps compares your Letterboxd w
 
 | Layer | Technology |
 |---|---|
-| Framework | [Next.js 15](https://nextjs.org) (App Router) |
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
 | UI | React 19 |
 | Styling | Tailwind CSS 4 |
 | Language | TypeScript 5 |
 | Posters & streaming | [TMDB API](https://www.themoviedb.org/documentation/api) |
-| Font | Geist |
 
 ---
 
@@ -80,7 +99,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 1. Drop your `watched.csv` onto the upload area
 2. Select which canonical lists to compare against (all selected by default)
-3. Explore your coverage rings, era donuts, top picks, and per-list blind spots
+3. Review your coverage rings, blind spot profile, and top picks
+4. Use **Share** to generate a PNG card, or **Export** to download a Letterboxd-importable watchlist CSV
 
 ---
 
@@ -101,7 +121,7 @@ npm run populate-lists -- --list sight-and-sound-2022 --dry-run
 
 The script fetches each film's Letterboxd page to extract structured data (title, year, director) via JSON-LD. Requests are rate-limited automatically — a full refresh of all 9 lists takes several minutes.
 
-Available list IDs: `sight-and-sound-2022`, `tspdt-1000`, `roger-ebert`, `letterboxd-official-500`, `letterboxd-most-fans-100`, `imdb-top250`, `oscar-best-picture`, `cannes-palme-dor`, `1001-movies`.
+Available list IDs: `sight-and-sound-2022`, `tspdt-1000`, `roger-ebert`, `letterboxd-official-500`, `letterboxd-most-fans-100`, `imdb-top250`, `oscar-best-picture`, `cannes-palme-dor`, `venice-golden-lion`.
 
 ---
 
