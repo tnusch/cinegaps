@@ -11,7 +11,7 @@ Find the blind spots in your film education. Cinegaps compares your Letterboxd w
 - **Blind spot profile** — derives your viewing archetype (The Cinephile, The Anglophone, The New Waver, etc.) from your era and category coverage patterns, with stat bars showing the underlying signals
 - **Top picks** — ranks unseen films by how many of your selected lists they appear on, surfacing the single highest-impact watches first
 - **Streaming availability** — each top pick shows which flatrate services carry it in your region, so you can act on a recommendation immediately
-- **Export & share** — download your top 10 blind spots as a Letterboxd-importable CSV, or generate a shareable PNG card with native mobile share support
+- **CSV export** — download your top 10 blind spots as a Letterboxd-importable watchlist CSV
 - **Private by design** — your watch history never leaves the browser; all processing is fully client-side with no server upload
 
 ---
@@ -52,6 +52,48 @@ The profile section derives one of eleven archetypes from your coverage data:
 
 ---
 
+## Project Structure
+
+```
+cinegaps/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                 Main page — all steps wired together
+│   │   ├── layout.tsx               Root layout and dark mode initialisation
+│   │   └── api/
+│   │       ├── poster/route.ts      Proxy route: TMDB poster images
+│   │       └── providers/route.ts   Proxy route: TMDB streaming availability
+│   ├── components/
+│   │   ├── ArchetypeCard.tsx        Blind spot profile card with era/category stat bars
+│   │   ├── CsvUploader.tsx          Drag-and-drop / click CSV upload area
+│   │   ├── EraChart.tsx             Era coverage bar chart
+│   │   ├── ListSelector.tsx         Category and list toggle UI
+│   │   ├── RadialRing.tsx           Circular coverage indicator per list
+│   │   ├── ResultsPanel.tsx         Seen/unseen film browser, grouped by list
+│   │   ├── StepSidebar.tsx          Sticky step-navigation sidebar
+│   │   └── TopPicks.tsx             Top picks grid with era/provider filters and CSV export
+│   ├── lib/
+│   │   ├── archetype.ts             Derives viewer archetype from coverage data
+│   │   ├── compare.ts               Film matching, gap analysis, era stats
+│   │   ├── export.ts                Letterboxd-compatible CSV download
+│   │   ├── letterboxd.ts            URL and slug helpers for Letterboxd links
+│   │   ├── parseCsv.ts              Parses Letterboxd watched.csv exports
+│   │   ├── poster.ts                TMDB poster fetching with in-flight cache
+│   │   ├── providers.ts             TMDB streaming provider fetching with cache
+│   │   ├── regions.ts               TMDB region codes and browser locale detection
+│   │   ├── types.ts                 Shared TypeScript types
+│   │   └── __tests__/               Vitest unit tests for all core logic
+│   └── data/
+│       ├── index.ts                 Exports ALL_LISTS array
+│       └── lists/                   One .ts file per canonical list (9 total)
+├── scripts/
+│   └── populate-lists.ts            Scrapes Letterboxd to refresh list data
+├── vitest.config.ts                 Vitest configuration
+└── public/                          Static assets
+```
+
+---
+
 ## Stack
 
 | Layer | Technology |
@@ -60,6 +102,7 @@ The profile section derives one of eleven archetypes from your coverage data:
 | UI | React 19 |
 | Styling | Tailwind CSS 4 |
 | Language | TypeScript 5 |
+| Testing | [Vitest](https://vitest.dev) |
 | Posters & streaming | [TMDB API](https://www.themoviedb.org/documentation/api) |
 
 ---
@@ -100,7 +143,32 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 1. Drop your `watched.csv` onto the upload area
 2. Select which canonical lists to compare against (all selected by default)
 3. Review your coverage rings, blind spot profile, and top picks
-4. Use **Share** to generate a PNG card, or **Export** to download a Letterboxd-importable watchlist CSV
+4. Use **Export** to download a Letterboxd-importable watchlist CSV
+
+---
+
+## Tests
+
+The core logic in `src/lib/` is covered by unit tests using [Vitest](https://vitest.dev). No browser or React setup required — these are pure function tests.
+
+```bash
+# Run tests once
+npm test
+
+# Watch mode
+npm run test:watch
+```
+
+**What's covered:**
+
+| File | What's tested |
+|---|---|
+| `compare.test.ts` | Title normalisation (articles, punctuation), ±1 year tolerance, `compare`/`compareAll`, `crossListGaps` deduplication and sort, `buildEraStats` era bucketing and cross-list deduplication |
+| `archetype.test.ts` | All 11 archetypes, threshold boundary values, edge cases (empty results, missing categories, single active era) |
+| `parseCsv.test.ts` | Valid rows, Windows CRLF line endings, quoted fields with embedded commas, missing/invalid year (skipped), invalid rating (→ `undefined`) |
+| `letterboxd.test.ts` | Slug generation with colons, apostrophes, numbers, and multiple spaces |
+| `regions.test.ts` | Locale extraction, language tag without region segment, unknown region code, navigator unavailable |
+| `export.test.ts` | CSV header and rows, double-quote escaping, default and custom filenames |
 
 ---
 
@@ -131,3 +199,30 @@ Available list IDs: `sight-and-sound-2022`, `tspdt-1000`, `roger-ebert`, `letter
 npm run build
 npm start
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome. A few ways to help:
+
+- **Add or refresh a canonical list** — run `npm run populate-lists` and open a PR with updated data
+- **Improve film matching** — the title normalisation in `src/lib/compare.ts` handles most cases but edge cases exist; tests live in `src/lib/__tests__/compare.test.ts`
+- **Fix a bug or add a feature** — open an issue first to discuss the approach, then submit a PR against `main`
+
+Please keep PRs focused — one change per PR makes review faster. Run `npm test` before submitting.
+
+---
+
+## Get in Touch
+
+- **Bug reports and feature requests** — [open an issue](../../issues)
+- **Questions and broader discussion** — [start a discussion](../../discussions)
+
+Feedback on the archetype logic, list selection, or matching accuracy is especially welcome.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.

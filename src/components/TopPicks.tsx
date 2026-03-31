@@ -9,8 +9,6 @@ import { fetchProviders, type ProviderInfo } from "../lib/providers";
 import { letterboxdFilmUrl } from "../lib/letterboxd";
 import { getLocaleRegion, TMDB_REGIONS } from "../lib/regions";
 import type { Film } from "../lib/types";
-import ShareCard from "./ShareCard";
-import type { Archetype } from "../lib/archetype";
 
 const TMDB_LOGO_BASE = "https://image.tmdb.org/t/p/w45";
 
@@ -142,18 +140,16 @@ const TopPickCard = memo(function TopPickCard({ film, listCount, listNames, regi
 
 interface Props {
   films: CrossListFilm[];
-  archetype?: Archetype | null;
   limit?: number;
 }
 
-export default function TopPicks({ films, archetype, limit = 10 }: Props) {
+export default function TopPicks({ films, limit = 10 }: Props) {
   const picks = films.filter((f) => f.listCount > 1).slice(0, limit);
 
   const [region, setRegion] = useState("US");
   const [filmProviders, setFilmProviders] = useState(new Map<string, ProviderInfo[]>());
   const [selectedProvider, setSelectedProvider] = useState<number | null>(null);
   const [selectedEra, setSelectedEra] = useState<EraLabel | null>(null);
-  const [showShareCard, setShowShareCard] = useState(false);
 
   // Set region from locale on mount (navigator not available during SSR)
   useEffect(() => {
@@ -204,9 +200,6 @@ export default function TopPicks({ films, archetype, limit = 10 }: Props) {
 
   return (
     <div>
-      {showShareCard && (
-        <ShareCard picks={picks} archetype={archetype} onClose={() => setShowShareCard(false)} />
-      )}
       {/* Header */}
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
@@ -227,12 +220,6 @@ export default function TopPicks({ films, archetype, limit = 10 }: Props) {
               <option key={r.code} value={r.code}>{r.name}</option>
             ))}
           </select>
-          <button
-            onClick={() => setShowShareCard(true)}
-            className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700"
-          >
-            Share ↗
-          </button>
         </div>
       </div>
 

@@ -188,7 +188,7 @@ export default function Home() {
                   title="What to watch next"
                   subtitle="Unwatched films that appear on the most of your selected lists at once."
                 />
-                <TopPicks films={gapFillers} archetype={archetype} />
+                <TopPicks films={gapFillers} />
               </section>
             )}
 
