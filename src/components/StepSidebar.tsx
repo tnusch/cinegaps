@@ -7,7 +7,8 @@ const STEPS = [
   { n: 2, label: "Coverage",        id: "step-2" },
   { n: 3, label: "Your profile",    id: "step-3" },
   { n: 4, label: "What to watch",   id: "step-4" },
-  { n: 5, label: "Explore by list", id: "step-5" },
+  { n: 5, label: "Export",          id: "step-5" },
+  { n: 6, label: "Explore by list", id: "step-6" },
 ];
 
 export default function StepSidebar({ show }: { show: boolean }) {

@@ -11,6 +11,7 @@ import ArchetypeCard from "../components/ArchetypeCard";
 import { ALL_LISTS } from "../data";
 import { buildEraStats, compareAll, crossListGaps } from "../lib/compare";
 import { deriveArchetype } from "../lib/archetype";
+import { downloadLetterboxdCsv } from "../lib/export";
 import type { WatchedFilm } from "../lib/types";
 
 function StepHeader({ n, title, subtitle }: { n: number; title: string; subtitle?: string }) {
@@ -193,10 +194,40 @@ export default function Home() {
 
             <hr className="border-zinc-100 dark:border-zinc-800" />
 
-            {/* ── Step 5: Explore by list ────────────────────────────────── */}
-            <section id="step-5">
+            {/* ── Step 5: Export to Letterboxd ───────────────────────────── */}
+            {gapFillers.length > 0 && (
+              <section id="step-5">
+                <StepHeader
+                  n={5}
+                  title="Export to Letterboxd"
+                  subtitle="Save your top picks as a Letterboxd watchlist."
+                />
+                <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-5 space-y-4">
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                    Download your top 10 gap-filling picks as a CSV and import them directly into Letterboxd as a watchlist — so you can track what to watch next right where you log films.
+                  </p>
+                  <ol className="list-decimal list-inside space-y-1 text-xs text-zinc-500 dark:text-zinc-400">
+                    <li>Click <strong className="text-zinc-700 dark:text-zinc-300">Download watchlist CSV</strong> below</li>
+                    <li>Go to <a href="https://letterboxd.com/about/importing-data/" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-800 dark:hover:text-zinc-200">letterboxd.com/about/importing-data</a> and follow the import instructions</li>
+                    <li>Choose <strong className="text-zinc-700 dark:text-zinc-300">Import as a list</strong> when prompted</li>
+                  </ol>
+                  <button
+                    onClick={() => downloadLetterboxdCsv(gapFillers.slice(0, 10).map((f) => f.film), "cinegaps-watchlist.csv")}
+                    className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 transition-colors hover:bg-zinc-700 dark:hover:bg-zinc-300 active:bg-zinc-800 dark:active:bg-zinc-200"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download watchlist CSV
+                  </button>
+                </div>
+              </section>
+            )}
+
+            <hr className="border-zinc-100 dark:border-zinc-800" />
+
+            {/* ── Step 6: Explore by list ────────────────────────────────── */}
+            <section id="step-6">
               <StepHeader
-                n={5}
+                n={6}
                 title="Explore by list"
                 subtitle="Browse every seen and unseen film, list by list."
               />
